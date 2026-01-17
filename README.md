@@ -39,13 +39,10 @@
             border-radius: 50%;
             border: 4px solid #00d9ff;
             margin: 0 auto 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 60px;
-            font-weight: bold;
-            color: white;
+            background-image: url('https://i.postimg.cc/3wC5R7bR/G_GURU_1.jpg');
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
         }
 
         h1 {
@@ -368,7 +365,7 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <div class="profile-img">FP</div>
+            <div class="profile-img"></div>
             <h1>Flimsyplank23</h1>
             <p class="tagline">Software Engineer/Developer for fun</p>
             <p class="bio">Discord bot dev, Website developer and your local fun IT guy</p>
