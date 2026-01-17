@@ -552,47 +552,85 @@
     <script>
         const terminalInput = document.getElementById('terminalInput');
         const output = document.getElementById('output');
+        let commandHistory = [];
+        let historyIndex = -1;
+
+        const fileSystem = {
+            '/': {
+                'README.md': 'Welcome to Flimsyplank23\'s portfolio! Check out my projects above.',
+                'about.txt': 'Flimsyplank23 - Software Engineer/Developer for fun\nDiscord bot dev, Website developer and your local fun IT guy',
+                'projects': {
+                    'gtamen-website.txt': 'GTAMEN Website - https://gtamen-website.github.io',
+                    'gtamen-bot.txt': 'GTAMEN Discord Bot - Community management',
+                    'algebra-adventure.txt': 'Algebra Adventure - https://supercoolalgebragames.github.io',
+                    'chat-website.txt': 'School Chat Website - https://supercoolmathgames-cool.github.io',
+                    'physics-site.txt': 'Ahmed Academy Physics - https://ahmedacademyphysics.github.io',
+                    'rizzbot.txt': 'RizzBot - Discord bot for charisma'
+                }
+            }
+        };
+
+        let currentPath = '/';
 
         const commands = {
             help: () => `Available commands:
   help      - Show this help message
-  about     - Learn more about me
-  projects  - List my projects
-  skills    - Show my technical skills
-  contact   - Display contact information
+  ls        - List directory contents
+  cat       - Display file contents (usage: cat <filename>)
+  pwd       - Print working directory
+  cd        - Change directory (usage: cd <directory>)
   clear     - Clear the terminal
-  socials   - Show social media links`,
+  whoami    - Display current user
+  echo      - Print text (usage: echo <text>)
+  date      - Show current date and time
+  uname     - Show system information`,
             
-            about: () => `Flimsyplank23 - Software Engineer/Developer for fun
-Discord bot dev, Website developer and your local fun IT guy
+            ls: () => {
+                const currentDir = getCurrentDir();
+                if (!currentDir) return 'Directory not found';
+                const items = Object.keys(currentDir);
+                return items.length > 0 ? items.join('  ') : 'Empty directory';
+            },
 
-I build things for fun and learning, specializing in web development and Discord bots.`,
-            
-            projects: () => `My Projects:
-  • GTAMEN Website - GTA V PS5 community hub
-  • GTAMEN Discord Bot - Community management bot
-  • Algebra Adventure - Educational games website
-  • School Chat Website - Communication platform
-  • Ahmed Academy Physics - Physics education site
-  • RizzBot - Fun Discord bot for charisma`,
-            
-            skills: () => `Technical Skills:
-  • Python
-  • HTML & CSS
-  • Discord.js
-  • Web Development
-  • Bot Development`,
-            
-            contact: () => `Contact Information:
-  Email:     Flynn@thehanks.co.uk
-  GitHub:    github.com/Flimsyplank23
-  Instagram: @flyingflynn12
-  TikTok:    @flynn.planespotting`,
-            
-            socials: () => `Social Media:
-  GitHub:    https://github.com/Flimsyplank23
-  Instagram: https://instagram.com/flyingflynn12
-  TikTok:    https://tiktok.com/@flynn.planespotting`,
+            pwd: () => currentPath,
+
+            cd: (args) => {
+                if (!args[0]) return currentPath;
+                if (args[0] === '..') {
+                    if (currentPath === '/') return currentPath;
+                    const parts = currentPath.split('/').filter(p => p);
+                    parts.pop();
+                    currentPath = '/' + parts.join('/');
+                    return null;
+                }
+                if (args[0] === '/') {
+                    currentPath = '/';
+                    return null;
+                }
+                const newPath = args[0].startsWith('/') ? args[0] : currentPath + (currentPath === '/' ? '' : '/') + args[0];
+                const dir = getDir(newPath);
+                if (dir && typeof dir === 'object' && !isFile(dir)) {
+                    currentPath = newPath;
+                    return null;
+                }
+                return `cd: ${args[0]}: No such directory`;
+            },
+
+            cat: (args) => {
+                if (!args[0]) return 'cat: missing file operand';
+                const file = getFile(args[0]);
+                if (file === null) return `cat: ${args[0]}: No such file`;
+                if (typeof file === 'object') return `cat: ${args[0]}: Is a directory`;
+                return file;
+            },
+
+            whoami: () => 'visitor',
+
+            echo: (args) => args.join(' '),
+
+            date: () => new Date().toString(),
+
+            uname: () => 'Flimsyplank23Shell v1.0.0 (x86_64)',
             
             clear: () => {
                 output.innerHTML = '<div class="terminal-line">Welcome to Flimsyplank23 Shell v1.0.0</div><div class="terminal-line">Type \'help\' to see available commands</div><div class="terminal-line" style="margin-top: 10px;"></div>';
@@ -600,17 +638,70 @@ I build things for fun and learning, specializing in web development and Discord
             }
         };
 
+        function getCurrentDir() {
+            return getDir(currentPath);
+        }
+
+        function getDir(path) {
+            if (path === '/') return fileSystem['/'];
+            const parts = path.split('/').filter(p => p);
+            let current = fileSystem['/'];
+            for (const part of parts) {
+                if (current && typeof current === 'object' && current[part]) {
+                    current = current[part];
+                } else {
+                    return null;
+                }
+            }
+            return current;
+        }
+
+        function getFile(filename) {
+            const currentDir = getCurrentDir();
+            if (!currentDir) return null;
+            return currentDir[filename] !== undefined ? currentDir[filename] : null;
+        }
+
+        function isFile(item) {
+            return typeof item === 'string';
+        }
+
+        terminalInput.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (commandHistory.length > 0 && historyIndex < commandHistory.length - 1) {
+                    historyIndex++;
+                    terminalInput.value = commandHistory[commandHistory.length - 1 - historyIndex];
+                }
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (historyIndex > 0) {
+                    historyIndex--;
+                    terminalInput.value = commandHistory[commandHistory.length - 1 - historyIndex];
+                } else if (historyIndex === 0) {
+                    historyIndex = -1;
+                    terminalInput.value = '';
+                }
+            }
+        });
+
         terminalInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
-                const command = terminalInput.value.trim().toLowerCase();
+                const input = terminalInput.value.trim();
+                const parts = input.split(' ');
+                const command = parts[0].toLowerCase();
+                const args = parts.slice(1);
                 
                 const commandLine = document.createElement('div');
                 commandLine.className = 'terminal-line';
-                commandLine.innerHTML = `<span class="terminal-prompt">visitor@flimsyplank23:~$</span> ${terminalInput.value}`;
+                commandLine.innerHTML = `<span class="terminal-prompt">visitor@flimsyplank23:${currentPath}$</span> ${terminalInput.value}`;
                 output.appendChild(commandLine);
 
-                if (command) {
-                    const result = commands[command] ? commands[command]() : `Command not found: ${command}. Type 'help' for available commands.`;
+                if (input) {
+                    commandHistory.push(input);
+                    historyIndex = -1;
+
+                    const result = commands[command] ? commands[command](args) : `${command}: command not found`;
                     if (result) {
                         const resultLine = document.createElement('div');
                         resultLine.className = 'terminal-line';
