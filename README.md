@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -408,7 +407,9 @@
             <div class="projects-grid">
                 <!-- GTAMEN Website -->
                 <div class="project-card">
-                    <img src="https://i.postimg.cc/50XYr8gn/Screenshot_2026_01_17_at_6_50_29_pm.png" alt="GTAMEN Website" class="project-image">
+                    <a href="https://gtamen-website.github.io" target="_blank">
+                        <img src="https://i.postimg.cc/50XYr8gn/Screenshot_2026_01_17_at_6_50_29_pm.png" alt="GTAMEN Website" class="project-image">
+                    </a>
                     <div class="project-content">
                         <div class="project-header">
                             <h3 class="project-title">GTAMEN Website</h3>
@@ -437,7 +438,9 @@
 
                 <!-- Algebra Adventure -->
                 <div class="project-card">
-                    <img src="https://i.postimg.cc/tTsZcFkB/Screenshot_2026_01_17_at_6_50_44_pm.png" alt="Algebra Adventure" class="project-image">
+                    <a href="https://supercoolalgebragames.github.io" target="_blank">
+                        <img src="https://i.postimg.cc/tTsZcFkB/Screenshot_2026_01_17_at_6_50_44_pm.png" alt="Algebra Adventure" class="project-image">
+                    </a>
                     <div class="project-content">
                         <div class="project-header">
                             <h3 class="project-title">Algebra Adventure</h3>
@@ -452,7 +455,9 @@
 
                 <!-- Chat Website -->
                 <div class="project-card">
-                    <img src="https://i.postimg.cc/6Qj4zMrS/Screenshot_2026_01_17_at_6_51_12_pm.png" alt="School Chat Website" class="project-image">
+                    <a href="https://supercoolmathgames-cool.github.io" target="_blank">
+                        <img src="https://i.postimg.cc/6Qj4zMrS/Screenshot_2026_01_17_at_6_51_12_pm.png" alt="School Chat Website" class="project-image">
+                    </a>
                     <div class="project-content">
                         <div class="project-header">
                             <h3 class="project-title">School Chat Website</h3>
@@ -467,7 +472,9 @@
 
                 <!-- Ahmed Academy Physics -->
                 <div class="project-card">
-                    <img src="https://i.postimg.cc/hGyQM2LH/Screenshot_2026_01_17_at_6_51_21_pm.png" alt="Ahmed Academy Physics" class="project-image">
+                    <a href="https://ahmedacademyphysics.github.io" target="_blank">
+                        <img src="https://i.postimg.cc/hGyQM2LH/Screenshot_2026_01_17_at_6_51_21_pm.png" alt="Ahmed Academy Physics" class="project-image">
+                    </a>
                     <div class="project-content">
                         <div class="project-header">
                             <h3 class="project-title">Ahmed Academy Physics</h3>
