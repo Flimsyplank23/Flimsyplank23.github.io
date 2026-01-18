@@ -951,12 +951,27 @@ Welcome, elite hacker! 😎
                 visualizer.classList.add('paused');
                 isPlaying = false;
             } else {
-                bgMusic.play();
-                musicToggle.textContent = '⏸️';
-                musicStatus.textContent = 'Now playing...';
-                visualizer.classList.remove('paused');
-                isPlaying = true;
+                bgMusic.play().then(() => {
+                    musicToggle.textContent = '⏸️';
+                    musicStatus.textContent = 'Now playing...';
+                    visualizer.classList.remove('paused');
+                    isPlaying = true;
+                }).catch((error) => {
+                    console.error('Audio play failed:', error);
+                    musicStatus.textContent = 'Failed to load audio';
+                    alert('Could not play audio. Please make sure "background-music.mp3" is uploaded to your repository.');
+                });
             }
+        });
+
+        // Check if audio file exists
+        bgMusic.addEventListener('error', (e) => {
+            console.error('Audio file error:', e);
+            musicStatus.textContent = 'Audio file not found';
+        });
+
+        bgMusic.addEventListener('loadeddata', () => {
+            console.log('Audio file loaded successfully');
         });
 
         // Set volume to 30% by default
