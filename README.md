@@ -942,8 +942,23 @@ Welcome, elite hacker! 😎
         const musicStatus = document.getElementById('musicStatus');
         const visualizer = document.getElementById('visualizer');
         let isPlaying = false;
+        let audioLoaded = false;
 
-        musicToggle.addEventListener('click', () => {
+        // Preload audio
+        bgMusic.load();
+
+        bgMusic.addEventListener('canplaythrough', () => {
+            audioLoaded = true;
+            console.log('Audio ready to play');
+        });
+
+        bgMusic.addEventListener('error', (e) => {
+            console.error('Audio error:', e);
+            musicStatus.textContent = 'Audio file error';
+            audioLoaded = false;
+        });
+
+        musicToggle.addEventListener('click', async () => {
             if (isPlaying) {
                 bgMusic.pause();
                 musicToggle.textContent = '▶️';
@@ -951,27 +966,37 @@ Welcome, elite hacker! 😎
                 visualizer.classList.add('paused');
                 isPlaying = false;
             } else {
-                bgMusic.play().then(() => {
+                try {
+                    // Reset audio if needed
+                    if (bgMusic.readyState < 2) {
+                        musicStatus.textContent = 'Loading audio...';
+                        await bgMusic.load();
+                    }
+                    
+                    await bgMusic.play();
                     musicToggle.textContent = '⏸️';
                     musicStatus.textContent = 'Now playing...';
                     visualizer.classList.remove('paused');
                     isPlaying = true;
-                }).catch((error) => {
-                    console.error('Audio play failed:', error);
-                    musicStatus.textContent = 'Failed to load audio';
-                    alert('Could not play audio. Please make sure "background-music.mp3" is uploaded to your repository.');
-                });
+                } catch (error) {
+                    console.error('Playback error:', error);
+                    musicStatus.textContent = 'Click again to retry';
+                    
+                    // Try one more time
+                    setTimeout(async () => {
+                        try {
+                            await bgMusic.play();
+                            musicToggle.textContent = '⏸️';
+                            musicStatus.textContent = 'Now playing...';
+                            visualizer.classList.remove('paused');
+                            isPlaying = true;
+                        } catch (e) {
+                            console.error('Retry failed:', e);
+                            musicStatus.textContent = 'Playback failed';
+                        }
+                    }, 500);
+                }
             }
-        });
-
-        // Check if audio file exists
-        bgMusic.addEventListener('error', (e) => {
-            console.error('Audio file error:', e);
-            musicStatus.textContent = 'Audio file not found';
-        });
-
-        bgMusic.addEventListener('loadeddata', () => {
-            console.log('Audio file loaded successfully');
         });
 
         // Set volume to 30% by default
