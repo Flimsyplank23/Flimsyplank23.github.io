@@ -350,6 +350,81 @@
             padding: 30px 20px;
             background: rgba(0, 0, 0, 0.3);
             color: #808080;
+            position: relative;
+        }
+
+        /* Music Player */
+        .music-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(26, 26, 46, 0.95);
+            border: 2px solid #00d9ff;
+            border-radius: 50px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 217, 255, 0.3);
+        }
+
+        .music-toggle {
+            background: transparent;
+            border: none;
+            color: #00d9ff;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .music-toggle:hover {
+            transform: scale(1.2);
+            color: #00ffa3;
+        }
+
+        .music-info {
+            color: #b0b0b0;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .music-visualizer {
+            display: flex;
+            gap: 3px;
+            align-items: flex-end;
+            height: 20px;
+        }
+
+        .music-visualizer span {
+            width: 3px;
+            background: #00d9ff;
+            animation: visualize 0.6s ease-in-out infinite;
+            border-radius: 2px;
+        }
+
+        .music-visualizer span:nth-child(1) { animation-delay: 0s; }
+        .music-visualizer span:nth-child(2) { animation-delay: 0.1s; }
+        .music-visualizer span:nth-child(3) { animation-delay: 0.2s; }
+        .music-visualizer span:nth-child(4) { animation-delay: 0.3s; }
+
+        @keyframes visualize {
+            0%, 100% { height: 5px; }
+            50% { height: 20px; }
+        }
+
+        .music-visualizer.paused span {
+            animation: none;
+            height: 5px;
         }
 
         @media (max-width: 768px) {
@@ -515,8 +590,8 @@
                 </div>
                 <div class="terminal-body">
                     <div class="terminal-output" id="output">
-                        <div class="terminal-line">Welcome to Flimsyplank23 Shell v1.0.0</div>
-                        <div class="terminal-line">Type 'help' to see available commands</div>
+                        <div class="terminal-line">🎮 Welcome to Flimsyplank23 Fun Terminal! 🎮</div>
+                        <div class="terminal-line">Type 'help' to see fun commands</div>
                         <div class="terminal-line" style="margin-top: 10px;"></div>
                     </div>
                     <div class="terminal-input-line">
@@ -549,122 +624,256 @@
     <footer>
     </footer>
 
+    <!-- Music Player -->
+    <div class="music-player">
+        <button class="music-toggle" id="musicToggle">▶️</button>
+        <div class="music-info">
+            <div class="music-visualizer paused" id="visualizer">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <span id="musicStatus">Click to play music</span>
+        </div>
+    </div>
+
+    <audio id="bgMusic" loop>
+        <source src="background-music.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
         const terminalInput = document.getElementById('terminalInput');
         const output = document.getElementById('output');
         let commandHistory = [];
         let historyIndex = -1;
+        let score = 0;
+        let secretsFound = [];
 
-        const fileSystem = {
-            '/': {
-                'README.md': 'Welcome to Flimsyplank23\'s portfolio! Check out my projects above.',
-                'about.txt': 'Flimsyplank23 - Software Engineer/Developer for fun\nDiscord bot dev, Website developer and your local fun IT guy',
-                'projects': {
-                    'gtamen-website.txt': 'GTAMEN Website - https://gtamen-website.github.io',
-                    'gtamen-bot.txt': 'GTAMEN Discord Bot - Community management',
-                    'algebra-adventure.txt': 'Algebra Adventure - https://supercoolalgebragames.github.io',
-                    'chat-website.txt': 'School Chat Website - https://supercoolmathgames-cool.github.io',
-                    'physics-site.txt': 'Ahmed Academy Physics - https://ahmedacademyphysics.github.io',
-                    'rizzbot.txt': 'RizzBot - Discord bot for charisma'
-                }
-            }
+        const jokes = [
+            "Why do programmers prefer dark mode? Because light attracts bugs! 🐛",
+            "Why did the developer go broke? Because he used up all his cache! 💰",
+            "How many programmers does it take to change a light bulb? None, that's a hardware problem! 💡",
+            "Why do Java developers wear glasses? Because they don't C#! 👓",
+            "What's a programmer's favorite hangout place? Foo Bar! 🍺",
+            "Why did the programmer quit his job? Because he didn't get arrays! 📊"
+        ];
+
+        const facts = [
+            "The first computer bug was an actual bug - a moth found in a computer in 1947! 🦋",
+            "The password for the computer controls of nuclear missiles in the US was '00000000' for eight years! 😱",
+            "The first 1GB hard drive, released in 1980, weighed over 500 pounds and cost $40,000! 💾",
+            "More than 570 new websites are created every minute! 🌐",
+            "The first computer mouse was made of wood! 🪵",
+            "Python was named after Monty Python, not the snake! 🐍"
+        ];
+
+        const secrets = {
+            'konami': '🎮 You found the Konami Code! +100 points!',
+            'matrix': '🟢 Welcome to the Matrix, Neo.',
+            'coffee': '☕ Here\'s your virtual coffee! You deserve it!',
+            'sudo': '🔐 Nice try! You need actual root access for that.',
+            'cookie': '🍪 Here\'s a cookie! You earned it!'
         };
 
-        let currentPath = '/';
-
         const commands = {
-            help: () => `Available commands:
-  help      - Show this help message
-  ls        - List directory contents
-  cat       - Display file contents (usage: cat <filename>)
-  pwd       - Print working directory
-  cd        - Change directory (usage: cd <directory>)
-  clear     - Clear the terminal
-  whoami    - Display current user
-  echo      - Print text (usage: echo <text>)
-  date      - Show current date and time
-  uname     - Show system information`,
+            help: () => `🎮 FUN TERMINAL COMMANDS 🎮
+  
+  joke        - Get a random programming joke
+  fact        - Learn a cool tech fact
+  fortune     - Get your tech fortune
+  magic8ball  - Ask the magic 8-ball a question
+  coinflip    - Flip a coin
+  dice        - Roll a dice (1-6)
+  rps         - Play Rock, Paper, Scissors (usage: rps rock/paper/scissors)
+  calculate   - Simple calculator (usage: calculate 5 + 3)
+  reverse     - Reverse any text (usage: reverse hello world)
+  mock        - Convert text to mOcKiNg CaSe (usage: mock your text here)
+  score       - Check your current score
+  secrets     - List how many secrets you've found
+  ascii       - Cool ASCII art
+  matrix      - Enter the Matrix
+  hack        - Become a hacker (for fun!)
+  coffee      - Get virtual coffee
+  clear       - Clear the terminal
+  
+Type any secret command to earn points! 🏆`,
             
-            ls: () => {
-                const currentDir = getCurrentDir();
-                if (!currentDir) return 'Directory not found';
-                const items = Object.keys(currentDir);
-                return items.length > 0 ? items.join('  ') : 'Empty directory';
+            joke: () => {
+                score += 5;
+                return jokes[Math.floor(Math.random() * jokes.length)] + '\n\n+5 points! 🎉';
             },
 
-            pwd: () => currentPath,
-
-            cd: (args) => {
-                if (!args[0]) return currentPath;
-                if (args[0] === '..') {
-                    if (currentPath === '/') return currentPath;
-                    const parts = currentPath.split('/').filter(p => p);
-                    parts.pop();
-                    currentPath = '/' + parts.join('/');
-                    return null;
-                }
-                if (args[0] === '/') {
-                    currentPath = '/';
-                    return null;
-                }
-                const newPath = args[0].startsWith('/') ? args[0] : currentPath + (currentPath === '/' ? '' : '/') + args[0];
-                const dir = getDir(newPath);
-                if (dir && typeof dir === 'object' && !isFile(dir)) {
-                    currentPath = newPath;
-                    return null;
-                }
-                return `cd: ${args[0]}: No such directory`;
+            fact: () => {
+                score += 5;
+                return facts[Math.floor(Math.random() * facts.length)] + '\n\n+5 points! 🎉';
             },
 
-            cat: (args) => {
-                if (!args[0]) return 'cat: missing file operand';
-                const file = getFile(args[0]);
-                if (file === null) return `cat: ${args[0]}: No such file`;
-                if (typeof file === 'object') return `cat: ${args[0]}: Is a directory`;
-                return file;
+            fortune: () => {
+                const fortunes = [
+                    "Your code will compile on the first try today! 🍀",
+                    "A bug-free day awaits you! ✨",
+                    "Today you will solve that impossible problem! 💡",
+                    "Stack Overflow will have the exact answer you need! 📚",
+                    "Your merge conflicts will be minimal! 🎊",
+                    "Coffee will taste extra good today! ☕"
+                ];
+                score += 10;
+                return '🔮 ' + fortunes[Math.floor(Math.random() * fortunes.length)] + '\n\n+10 points!';
             },
 
-            whoami: () => 'visitor',
+            magic8ball: (args) => {
+                if (args.length === 0) return 'Ask me a question! (usage: magic8ball Will I finish my project?)';
+                const responses = [
+                    "Yes, definitely! ✅",
+                    "Without a doubt! 💯",
+                    "The code says yes! 🎯",
+                    "Better ask Stack Overflow 🤔",
+                    "Error 404: Answer not found ❌",
+                    "Absolutely! 🌟",
+                    "Try again after debugging 🐛",
+                    "All signs point to yes! ✨"
+                ];
+                score += 5;
+                return '🎱 ' + responses[Math.floor(Math.random() * responses.length)] + '\n\n+5 points!';
+            },
 
-            echo: (args) => args.join(' '),
+            coinflip: () => {
+                score += 3;
+                const result = Math.random() < 0.5 ? 'Heads! 👑' : 'Tails! 🦅';
+                return '🪙 ' + result + '\n\n+3 points!';
+            },
 
-            date: () => new Date().toString(),
+            dice: () => {
+                score += 3;
+                const roll = Math.floor(Math.random() * 6) + 1;
+                return '🎲 You rolled a ' + roll + '!\n\n+3 points!';
+            },
 
-            uname: () => 'Flimsyplank23Shell v1.0.0 (x86_64)',
-            
+            rps: (args) => {
+                if (!args[0] || !['rock', 'paper', 'scissors'].includes(args[0].toLowerCase())) {
+                    return 'Usage: rps rock/paper/scissors';
+                }
+                const choices = ['rock', 'paper', 'scissors'];
+                const computer = choices[Math.floor(Math.random() * 3)];
+                const player = args[0].toLowerCase();
+                
+                let result = '';
+                if (player === computer) {
+                    result = "It's a tie! 🤝";
+                    score += 5;
+                } else if (
+                    (player === 'rock' && computer === 'scissors') ||
+                    (player === 'paper' && computer === 'rock') ||
+                    (player === 'scissors' && computer === 'paper')
+                ) {
+                    result = 'You win! 🎉';
+                    score += 15;
+                } else {
+                    result = 'Computer wins! 😢';
+                    score += 2;
+                }
+                return `✊✋✌️ You: ${player} | Computer: ${computer}\n${result}\n\n+${player === computer ? 5 : (result.includes('win!') ? 15 : 2)} points!`;
+            },
+
+            calculate: (args) => {
+                if (args.length < 3) return 'Usage: calculate 5 + 3';
+                try {
+                    const num1 = parseFloat(args[0]);
+                    const operator = args[1];
+                    const num2 = parseFloat(args[2]);
+                    let result;
+                    
+                    switch(operator) {
+                        case '+': result = num1 + num2; break;
+                        case '-': result = num1 - num2; break;
+                        case '*': case 'x': result = num1 * num2; break;
+                        case '/': result = num1 / num2; break;
+                        default: return 'Invalid operator! Use +, -, *, /';
+                    }
+                    
+                    score += 3;
+                    return `🧮 ${num1} ${operator} ${num2} = ${result}\n\n+3 points!`;
+                } catch {
+                    return 'Invalid calculation!';
+                }
+            },
+
+            reverse: (args) => {
+                if (args.length === 0) return 'Usage: reverse hello world';
+                score += 5;
+                return '🔄 ' + args.join(' ').split('').reverse().join('') + '\n\n+5 points!';
+            },
+
+            mock: (args) => {
+                if (args.length === 0) return 'Usage: mock your text here';
+                score += 5;
+                const text = args.join(' ');
+                const mocked = text.split('').map((char, i) => 
+                    i % 2 === 0 ? char.toLowerCase() : char.toUpperCase()
+                ).join('');
+                return '🤡 ' + mocked + '\n\n+5 points!';
+            },
+
+            ascii: () => {
+                score += 10;
+                return `
+    _____ _ _                            _             _    ____  _____ 
+   |  ___| (_)_ __ ___  ___ _   _ _ __ | | __ _ _ __ | | _|___ \\|___ / 
+   | |_  | | | '_ \` _ \\/ __| | | | '_ \\| |/ _\` | '_ \\| |/ / __) | |_ \\ 
+   |  _| | | | | | | | \\__ \\ |_| | |_) | | (_| | | | |   < / __/ ___) |
+   |_|   |_|_|_| |_| |_|___/\\__, | .__/|_|\\__,_|_| |_|_|\\_\\_____|____/ 
+                            |___/|_|                                    
+
++10 points! 🎨`;
+            },
+
+            matrix: () => {
+                if (!secretsFound.includes('matrix')) {
+                    secretsFound.push('matrix');
+                    score += 50;
+                    return secrets.matrix + '\n\n+50 SECRET POINTS! 🎯';
+                }
+                return '🟢 Wake up, Neo... The Matrix has you...';
+            },
+
+            hack: () => {
+                score += 10;
+                return `🔴 INITIATING HACK SEQUENCE...
+[████████████████████] 100%
+ACCESS GRANTED
+Welcome, elite hacker! 😎
+
++10 points!`;
+            },
+
+            coffee: () => {
+                if (!secretsFound.includes('coffee')) {
+                    secretsFound.push('coffee');
+                    score += 25;
+                    return secrets.coffee + '\n\n+25 SECRET POINTS! 🎯';
+                }
+                return '☕ Here\'s another coffee! Stay caffeinated! +5 points!';
+            },
+
+            sudo: (args) => {
+                if (!secretsFound.includes('sudo')) {
+                    secretsFound.push('sudo');
+                    score += 30;
+                    return secrets.sudo + '\n\n+30 SECRET POINTS! 🎯';
+                }
+                return '🔐 [sudo] password for visitor: ******* (Access Denied)';
+            },
+
+            score: () => `🏆 Your current score: ${score} points!\n💎 Secrets found: ${secretsFound.length}/5`,
+
+            secrets: () => `🔍 Secrets found: ${secretsFound.length}/5\n\nKeep exploring to find hidden commands! 🎯`,
+
             clear: () => {
-                output.innerHTML = '<div class="terminal-line">Welcome to Flimsyplank23 Shell v1.0.0</div><div class="terminal-line">Type \'help\' to see available commands</div><div class="terminal-line" style="margin-top: 10px;"></div>';
+                output.innerHTML = '<div class="terminal-line">🎮 Welcome to Flimsyplank23 Fun Terminal! 🎮</div><div class="terminal-line">Type \'help\' to see fun commands</div><div class="terminal-line" style="margin-top: 10px;"></div>';
                 return null;
             }
         };
-
-        function getCurrentDir() {
-            return getDir(currentPath);
-        }
-
-        function getDir(path) {
-            if (path === '/') return fileSystem['/'];
-            const parts = path.split('/').filter(p => p);
-            let current = fileSystem['/'];
-            for (const part of parts) {
-                if (current && typeof current === 'object' && current[part]) {
-                    current = current[part];
-                } else {
-                    return null;
-                }
-            }
-            return current;
-        }
-
-        function getFile(filename) {
-            const currentDir = getCurrentDir();
-            if (!currentDir) return null;
-            return currentDir[filename] !== undefined ? currentDir[filename] : null;
-        }
-
-        function isFile(item) {
-            return typeof item === 'string';
-        }
 
         terminalInput.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowUp') {
@@ -694,14 +903,14 @@
                 
                 const commandLine = document.createElement('div');
                 commandLine.className = 'terminal-line';
-                commandLine.innerHTML = `<span class="terminal-prompt">visitor@flimsyplank23:${currentPath}$</span> ${terminalInput.value}`;
+                commandLine.innerHTML = `<span class="terminal-prompt">visitor@flimsyplank23:~$</span> ${terminalInput.value}`;
                 output.appendChild(commandLine);
 
                 if (input) {
                     commandHistory.push(input);
                     historyIndex = -1;
 
-                    const result = commands[command] ? commands[command](args) : `${command}: command not found`;
+                    const result = commands[command] ? commands[command](args) : `❌ Command not found: ${command}\nType 'help' for fun commands!`;
                     if (result) {
                         const resultLine = document.createElement('div');
                         resultLine.className = 'terminal-line';
@@ -726,6 +935,32 @@
         document.querySelector('.terminal-body').addEventListener('click', () => {
             terminalInput.focus();
         });
+
+        // Music Player
+        const musicToggle = document.getElementById('musicToggle');
+        const bgMusic = document.getElementById('bgMusic');
+        const musicStatus = document.getElementById('musicStatus');
+        const visualizer = document.getElementById('visualizer');
+        let isPlaying = false;
+
+        musicToggle.addEventListener('click', () => {
+            if (isPlaying) {
+                bgMusic.pause();
+                musicToggle.textContent = '▶️';
+                musicStatus.textContent = 'Click to play music';
+                visualizer.classList.add('paused');
+                isPlaying = false;
+            } else {
+                bgMusic.play();
+                musicToggle.textContent = '⏸️';
+                musicStatus.textContent = 'Now playing...';
+                visualizer.classList.remove('paused');
+                isPlaying = true;
+            }
+        });
+
+        // Set volume to 30% by default
+        bgMusic.volume = 0.3;
     </script>
 </body>
 </html>
