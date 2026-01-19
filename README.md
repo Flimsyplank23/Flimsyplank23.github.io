@@ -631,8 +631,7 @@
         let score = 0;
         let secretsFound = [];
 
-        'joke': () => {
-                const jokes = [
+        const jokes = [
                     // Your Original Jokes
                     "Why do programmers prefer dark mode? Because light attracts bugs! 🐛",
                     "Why did the developer go broke? Because he used up all his cache! 💰",
@@ -650,9 +649,7 @@
                     "Why does Python live in the terminal? Because it's afraid of C-level executives. 💻",
                     "Software is the part of a computer you can kick. Hardware is the part you can only curse at. 🖥️",
                     "Why was the discord.py bot so good at making friends? It had excellent async communication skills. 🤖"
-                ];
-                return jokes[Math.floor(Math.random() * jokes.length)];
-            },
+                ]
 
         const facts = [
             "The first computer bug was an actual bug - a moth found in a computer in 1947! 🦋",
