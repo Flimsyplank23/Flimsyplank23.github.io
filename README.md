@@ -464,7 +464,7 @@
                 <div class="skill-badge">Python</div>
                 <div class="skill-badge">HTML</div>
                 <div class="skill-badge">CSS</div>
-                <div class="skill-badge">Discord.js</div>
+                <div class="skill-badge">Discord.py</div>
                 <div class="skill-badge">Web Development</div>
             </div>
         </div>
@@ -623,25 +623,6 @@
     <!-- Footer -->
     <footer>
     </footer>
-
-    <!-- Music Player -->
-    <div class="music-player">
-        <button class="music-toggle" id="musicToggle">▶️</button>
-        <div class="music-info">
-            <div class="music-visualizer paused" id="visualizer">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            <span id="musicStatus">Click to play music</span>
-        </div>
-    </div>
-
-    <audio id="bgMusic" loop>
-        <source src="background-music.mp3" type="audio/mpeg">
-    </audio>
-
     <script>
         const terminalInput = document.getElementById('terminalInput');
         const output = document.getElementById('output');
