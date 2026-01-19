@@ -631,14 +631,28 @@
         let score = 0;
         let secretsFound = [];
 
-        const jokes = [
-            "Why do programmers prefer dark mode? Because light attracts bugs! 🐛",
-            "Why did the developer go broke? Because he used up all his cache! 💰",
-            "How many programmers does it take to change a light bulb? None, that's a hardware problem! 💡",
-            "Why do Java developers wear glasses? Because they don't C#! 👓",
-            "What's a programmer's favorite hangout place? Foo Bar! 🍺",
-            "Why did the programmer quit his job? Because he didn't get arrays! 📊"
-        ];
+        'joke': () => {
+                const jokes = [
+                    // Your Original Jokes
+                    "Why do programmers prefer dark mode? Because light attracts bugs! 🐛",
+                    "Why did the developer go broke? Because he used up all his cache! 💰",
+                    "How many programmers does it take to change a light bulb? None, that's a hardware problem! 💡",
+                    "Why do Java developers wear glasses? Because they don't C#! 👓",
+                    "What's a programmer's favorite hangout place? Foo Bar! 🍺",
+                    "Why did the programmer quit his job? Because he didn't get arrays! 📊",
+                    
+                    // New Added Jokes
+                    "A SQL query walks into a bar, walks up to two tables, and asks: 'Can I join you?' 🗄️",
+                    "How do you identify a Pythonista? They get physically ill when they see a semicolon. 🐍",
+                    "There are 10 types of people in the world: those who understand binary, and those who don't. 🔢",
+                    "To understand recursion, you must first understand recursion. 🔄",
+                    "A programmer's spouse says: 'Run to the store and buy a loaf of bread. If they have eggs, buy a dozen.' The programmer returns with 12 loaves of bread. 🥚",
+                    "Why does Python live in the terminal? Because it's afraid of C-level executives. 💻",
+                    "Software is the part of a computer you can kick. Hardware is the part you can only curse at. 🖥️",
+                    "Why was the discord.py bot so good at making friends? It had excellent async communication skills. 🤖"
+                ];
+                return jokes[Math.floor(Math.random() * jokes.length)];
+            },
 
         const facts = [
             "The first computer bug was an actual bug - a moth found in a computer in 1947! 🦋",
