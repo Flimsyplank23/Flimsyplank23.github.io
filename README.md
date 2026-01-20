@@ -405,7 +405,7 @@
 </head>
 <body>
     <div id="terminated-screen">
-        <img src="https://i.postimg.cc/mD3m8vY0/terminated-red.png" class="red-alert-img" alt="TERMINATED">
+        <img src="https://i.postimg.cc/ZRj4NH2K/IMG-1749.jpg" class="red-alert-img" alt="TERMINATED">
         <h1 style="font-size: 3rem; margin-bottom: 10px;">ACCESS TERMINATED</h1>
         <p id="display-ip" style="font-size: 1.2rem; margin-bottom: 20px; color: #fff;"></p>
         <p style="letter-spacing: 2px;">YOUR IP HAS BEEN BLACKLISTED. CONNECTION REFUSED.</p>
