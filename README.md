@@ -297,6 +297,11 @@
             margin-right: 10px;
         }
 
+        /* Styles for Banned State */
+        .terminal-prompt.banned {
+            color: #ff5f56;
+        }
+
         .terminal-input-line {
             display: flex;
             align-items: center;
@@ -506,7 +511,7 @@
                         <div class="terminal-line" style="margin-top: 10px;"></div>
                     </div>
                     <div class="terminal-input-line">
-                        <span class="terminal-prompt">visitor@flimsyplank23:~$</span>
+                        <span class="terminal-prompt" id="prompt">visitor@flimsyplank23:~$</span>
                         <input type="text" class="terminal-input" id="terminalInput" autofocus>
                     </div>
                 </div>
@@ -533,8 +538,23 @@
     <script>
         const terminalInput = document.getElementById('terminalInput');
         const output = document.getElementById('output');
+        const promptSpan = document.getElementById('prompt');
         let commandHistory = [];
         let historyIndex = -1;
+
+        // --- IP BLOCKING SYSTEM (SIMULATED) ---
+        const ADMIN_PASSWORD = "admin123";
+        let isBanned = localStorage.getItem('terminal_banned') === 'true';
+
+        // Check ban status on load
+        if (isBanned) {
+            promptSpan.innerHTML = "🚫 BLOCKED@server:~$";
+            promptSpan.classList.add('banned');
+            setTimeout(() => {
+                output.innerHTML += '<div class="terminal-line" style="color: #ff5f56; font-weight: bold;">⚠️ ACCESS DENIED: THIS TERMINAL HAS BEEN BLOCKED.</div>';
+                output.innerHTML += '<div class="terminal-line" style="color: #ff5f56;">Type \'unblock [password]\' to restore access.</div>';
+            }, 100);
+        }
 
         const jokes = [
             "Why do programmers prefer dark mode? Because light attracts bugs! 🐛",
@@ -565,6 +585,7 @@
                        "  joke      - Tell a random coding joke\n" +
                        "  fact      - Tell a random tech fact\n" +
                        "  goon      - 👹 Summon a Neko from the void\n" +
+                       "  banme     - 🚫 Block your own IP (Simulation)\n" +
                        "  clear     - Clear terminal screen";
             },
             about: () => "👋 Hi! I'm Flimsyplank23.\nI'm a software engineer, discord bot developer, and web enthusiast based in the UK.",
@@ -584,6 +605,31 @@
                             </div>`;
                 } catch (error) {
                     return `<span style="color: #ff5f56;">❌ Failed to summon: The Neko API is unavailable.</span>`;
+                }
+            },
+            
+            // BLOCK COMMAND (SIMULATION)
+            banme: () => {
+                localStorage.setItem('terminal_banned', 'true');
+                isBanned = true;
+                promptSpan.innerHTML = "🚫 BLOCKED@server:~$";
+                promptSpan.classList.add('banned');
+                return "⚠️ SYSTEM ALERT: Your IP has been logged and blocked.\nConnection terminated.\nType 'unblock <password>' to restore access.";
+            },
+
+            // UNBLOCK COMMAND
+            unblock: (args) => {
+                // If not actually banned, just say so
+                if (!isBanned) return "ℹ️ System Info: You are not currently blocked.";
+
+                if (args[0] === ADMIN_PASSWORD) {
+                    localStorage.removeItem('terminal_banned');
+                    isBanned = false;
+                    promptSpan.innerHTML = "visitor@flimsyplank23:~$";
+                    promptSpan.classList.remove('banned');
+                    return "✅ SUCCESS: IP Unblocked. Access restored.";
+                } else {
+                    return "❌ ERROR: Invalid Password. Access Denied.";
                 }
             },
             
@@ -621,17 +667,30 @@
                 const command = parts[0].toLowerCase();
                 const args = parts.slice(1);
                 
-                // Add the user's command to the output
+                // Add the user's command to the output (Visual check for Banned style)
                 const commandLine = document.createElement('div');
                 commandLine.className = 'terminal-line';
-                commandLine.innerHTML = `<span class="terminal-prompt">visitor@flimsyplank23:~$</span> ${terminalInput.value}`;
+                const promptHtml = isBanned ? 
+                    `<span class="terminal-prompt banned">🚫 BLOCKED@server:~$</span>` : 
+                    `<span class="terminal-prompt">visitor@flimsyplank23:~$</span>`;
+                
+                commandLine.innerHTML = `${promptHtml} ${terminalInput.value}`;
                 output.appendChild(commandLine);
 
                 if (input) {
                     commandHistory.push(input);
                     historyIndex = -1;
 
-                    if (commands[command]) {
+                    // --- BANNED LOGIC ---
+                    if (isBanned && command !== 'unblock') {
+                         const errorLine = document.createElement('div');
+                         errorLine.className = 'terminal-line';
+                         errorLine.style.color = '#ff5f56';
+                         errorLine.textContent = `🚫 ACCESS DENIED: Terminal is blocked. Type 'unblock <password>' to unlock.`;
+                         output.appendChild(errorLine);
+                    } 
+                    // --- NORMAL LOGIC ---
+                    else if (commands[command]) {
                         // Show loading indicator for async commands
                         const loadingId = 'loading-' + Date.now();
                         const loadingLine = document.createElement('div');
@@ -653,9 +712,8 @@
                                 resultLine.className = 'terminal-line';
                                 resultLine.style.marginTop = '8px';
                                 // We use innerHTML here to allow the <img> tag from 'goon' command
-                                // For text commands, we should be careful, but these commands are hardcoded safe.
                                 resultLine.innerHTML = result.replace(/\n/g, '<br>'); 
-                                resultLine.style.color = '#b0b0b0';
+                                resultLine.style.color = (command === 'banme' || isBanned) ? '#ff5f56' : '#b0b0b0';
                                 output.appendChild(resultLine);
                             }
                         } catch (err) {
