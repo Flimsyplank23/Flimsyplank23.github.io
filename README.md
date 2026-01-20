@@ -688,6 +688,7 @@
   hack        - Become a hacker (for fun!)
   coffee      - Get virtual coffee
   clear       - Clear the terminal
+  goon        - Goon
   
 Type any secret command to earn points! 🏆`,
             
@@ -728,6 +729,17 @@ Type any secret command to earn points! 🏆`,
                 ];
                 score += 5;
                 return '🎱 ' + responses[Math.floor(Math.random() * responses.length)] + '\n\n+5 points!';
+            goon: (args) => {
+                if (args.length === 0) return 'Are you gooner?! (usage: Gooner do I goon?)';
+                const responses = [
+                    "Yes, definitely! ✅",
+                    "Without a doubt! 💯",
+                    "The code says yes! 🎯",
+                    "Absolutely! 🌟",
+                    "All signs point to yes! ✨"
+                ];
+                score += 5;
+                return '😈 ' + responses[Math.floor(Math.random() * responses.length)] + '\n\n+5 points!';
             },
 
             coinflip: () => {
