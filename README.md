@@ -77,7 +77,7 @@
             border-radius: 50%;
             border: 4px solid #00d9ff;
             margin: 0 auto 30px;
-            background-image: url('https://i.postimg.cc/3wC5R7bR/G_GURU_1.jpg');
+            background-image: url('https://i.postimg.cc/3wC5R7bR/G_GURU_1.jpg](https://i.postimg.cc/ZRj4NH2K/IMG-1749.jpg');
             background-size: cover;
             background-position: center;
             overflow: hidden;
