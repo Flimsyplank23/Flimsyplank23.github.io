@@ -278,6 +278,8 @@
             padding: 20px;
             font-family: 'Courier New', monospace;
             min-height: 400px;
+            max-height: 600px;
+            overflow-y: auto;
         }
 
         .terminal-output {
@@ -287,10 +289,12 @@
 
         .terminal-line {
             margin-bottom: 8px;
+            word-wrap: break-word;
         }
 
         .terminal-prompt {
             color: #00d9ff;
+            margin-right: 10px;
         }
 
         .terminal-input-line {
@@ -307,7 +311,6 @@
             outline: none;
             flex: 1;
             padding: 0;
-            margin-left: 8px;
         }
 
         /* Contact Section */
@@ -344,89 +347,6 @@
             transform: translateX(5px);
         }
 
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 30px 20px;
-            background: rgba(0, 0, 0, 0.3);
-            color: #808080;
-            position: relative;
-        }
-
-        /* Music Player */
-        .music-player {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(26, 26, 46, 0.95);
-            border: 2px solid #00d9ff;
-            border-radius: 50px;
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0, 217, 255, 0.3);
-        }
-
-        .music-toggle {
-            background: transparent;
-            border: none;
-            color: #00d9ff;
-            font-size: 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            padding: 0;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .music-toggle:hover {
-            transform: scale(1.2);
-            color: #00ffa3;
-        }
-
-        .music-info {
-            color: #b0b0b0;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .music-visualizer {
-            display: flex;
-            gap: 3px;
-            align-items: flex-end;
-            height: 20px;
-        }
-
-        .music-visualizer span {
-            width: 3px;
-            background: #00d9ff;
-            animation: visualize 0.6s ease-in-out infinite;
-            border-radius: 2px;
-        }
-
-        .music-visualizer span:nth-child(1) { animation-delay: 0s; }
-        .music-visualizer span:nth-child(2) { animation-delay: 0.1s; }
-        .music-visualizer span:nth-child(3) { animation-delay: 0.2s; }
-        .music-visualizer span:nth-child(4) { animation-delay: 0.3s; }
-
-        @keyframes visualize {
-            0%, 100% { height: 5px; }
-            50% { height: 20px; }
-        }
-
-        .music-visualizer.paused span {
-            animation: none;
-            height: 5px;
-        }
-
         @media (max-width: 768px) {
             h1 { font-size: 2rem; }
             .tagline { font-size: 1.2rem; }
@@ -437,7 +357,6 @@
     </style>
 </head>
 <body>
-    <!-- Hero Section -->
     <section class="hero">
         <div class="container">
             <div class="profile-img"></div>
@@ -472,12 +391,10 @@
 
     <div class="divider"></div>
 
-    <!-- Projects Section -->
     <section class="section">
         <div class="container">
             <h2 class="section-title">Projects</h2>
             <div class="projects-grid">
-                <!-- GTAMEN Website -->
                 <div class="project-card">
                     <a href="https://gtamen-website.github.io" target="_blank">
                         <img src="https://i.postimg.cc/50XYr8gn/Screenshot_2026_01_17_at_6_50_29_pm.png" alt="GTAMEN Website" class="project-image">
@@ -494,7 +411,6 @@
                     </div>
                 </div>
 
-                <!-- GTAMEN Discord Bot -->
                 <div class="project-card">
                     <img src="https://i.postimg.cc/fb2S58cp/Screenshot_2026_01_17_at_6_57_20_pm.png" alt="GTAMEN Discord Bot" class="project-image">
                     <div class="project-content">
@@ -508,7 +424,6 @@
                     </div>
                 </div>
 
-                <!-- Algebra Adventure -->
                 <div class="project-card">
                     <a href="https://supercoolalgebragames.github.io" target="_blank">
                         <img src="https://i.postimg.cc/tTsZcFkB/Screenshot_2026_01_17_at_6_50_44_pm.png" alt="Algebra Adventure" class="project-image">
@@ -525,7 +440,6 @@
                     </div>
                 </div>
 
-                <!-- Chat Website -->
                 <div class="project-card">
                     <a href="https://supercoolmathgames-cool.github.io" target="_blank">
                         <img src="https://i.postimg.cc/6Qj4zMrS/Screenshot_2026_01_17_at_6_51_12_pm.png" alt="School Chat Website" class="project-image">
@@ -542,7 +456,6 @@
                     </div>
                 </div>
 
-                <!-- Ahmed Academy Physics -->
                 <div class="project-card">
                     <a href="https://ahmedacademyphysics.github.io" target="_blank">
                         <img src="https://i.postimg.cc/hGyQM2LH/Screenshot_2026_01_17_at_6_51_21_pm.png" alt="Ahmed Academy Physics" class="project-image">
@@ -559,7 +472,6 @@
                     </div>
                 </div>
 
-                <!-- RizzBot -->
                 <div class="project-card">
                     <img src="https://i.postimg.cc/Zq7vjw8X/Screenshot_2026_01_17_at_6_56_59_pm.png" alt="RizzBot" class="project-image">
                     <div class="project-content">
@@ -578,7 +490,6 @@
 
     <div class="divider"></div>
 
-    <!-- Terminal Section -->
     <section class="terminal-section">
         <div class="container">
             <h2 class="terminal-title">Try the interactive shell!</h2>
@@ -605,7 +516,6 @@
 
     <div class="divider"></div>
 
-    <!-- Contact Section -->
     <section class="contact">
         <div class="container">
             <h2 class="contact-title">Feel like contacting me?</h2>
@@ -620,36 +530,20 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer>
-    </footer>
     <script>
         const terminalInput = document.getElementById('terminalInput');
         const output = document.getElementById('output');
         let commandHistory = [];
         let historyIndex = -1;
-        let score = 0;
-        let secretsFound = [];
 
         const jokes = [
-                    // Your Original Jokes
-                    "Why do programmers prefer dark mode? Because light attracts bugs! 🐛",
-                    "Why did the developer go broke? Because he used up all his cache! 💰",
-                    "How many programmers does it take to change a light bulb? None, that's a hardware problem! 💡",
-                    "Why do Java developers wear glasses? Because they don't C#! 👓",
-                    "What's a programmer's favorite hangout place? Foo Bar! 🍺",
-                    "Why did the programmer quit his job? Because he didn't get arrays! 📊",
-                    
-                    // New Added Jokes
-                    "A SQL query walks into a bar, walks up to two tables, and asks: 'Can I join you?' 🗄️",
-                    "How do you identify a Pythonista? They get physically ill when they see a semicolon. 🐍",
-                    "There are 10 types of people in the world: those who understand binary, and those who don't. 🔢",
-                    "To understand recursion, you must first understand recursion. 🔄",
-                    "A programmer's spouse says: 'Run to the store and buy a loaf of bread. If they have eggs, buy a dozen.' The programmer returns with 12 loaves of bread. 🥚",
-                    "Why does Python live in the terminal? Because it's afraid of C-level executives. 💻",
-                    "Software is the part of a computer you can kick. Hardware is the part you can only curse at. 🖥️",
-                    "Why was the discord.py bot so good at making friends? It had excellent async communication skills. 🤖"
-                ]
+            "Why do programmers prefer dark mode? Because light attracts bugs! 🐛",
+            "Why did the developer go broke? Because he used up all his cache! 💰",
+            "How many programmers does it take to change a light bulb? None, that's a hardware problem! 💡",
+            "Why do Java developers wear glasses? Because they don't C#! 👓",
+            "What's a programmer's favorite hangout place? Foo Bar! 🍺",
+            "Why did the programmer quit his job? Because he didn't get arrays! 📊"
+        ];
 
         const facts = [
             "The first computer bug was an actual bug - a moth found in a computer in 1947! 🦋",
@@ -660,225 +554,46 @@
             "Python was named after Monty Python, not the snake! 🐍"
         ];
 
-        const secrets = {
-            'konami': '🎮 You found the Konami Code! +100 points!',
-            'matrix': '🟢 Welcome to the Matrix, Neo.',
-            'coffee': '☕ Here\'s your virtual coffee! You deserve it!',
-            'sudo': '🔐 Nice try! You need actual root access for that.',
-            'cookie': '🍪 Here\'s a cookie! You earned it!'
-        };
-
+        // COMMANDS LIST
         const commands = {
-            help: () => `🎮 FUN TERMINAL COMMANDS 🎮
-  
-  joke        - Get a random programming joke
-  fact        - Learn a cool tech fact
-  fortune     - Get your tech fortune
-  magic8ball  - Ask the magic 8-ball a question
-  coinflip    - Flip a coin
-  dice        - Roll a dice (1-6)
-  rps         - Play Rock, Paper, Scissors (usage: rps rock/paper/scissors)
-  calculate   - Simple calculator (usage: calculate 5 + 3)
-  reverse     - Reverse any text (usage: reverse hello world)
-  mock        - Convert text to mOcKiNg CaSe (usage: mock your text here)
-  score       - Check your current score
-  secrets     - List how many secrets you've found
-  ascii       - Cool ASCII art
-  matrix      - Enter the Matrix
-  hack        - Become a hacker (for fun!)
-  coffee      - Get virtual coffee
-  clear       - Clear the terminal
-  goon        - Goon
-  
-Type any secret command to earn points! 🏆`,
+            help: () => {
+                return "🌟 AVAILABLE COMMANDS 🌟\n\n" +
+                       "  help      - Show this menu\n" +
+                       "  about     - Who is Flimsyplank23?\n" +
+                       "  skills    - List technical skills\n" +
+                       "  socials   - Display social links\n" +
+                       "  joke      - Tell a random coding joke\n" +
+                       "  fact      - Tell a random tech fact\n" +
+                       "  goon      - 👹 Summon a Neko from the void\n" +
+                       "  clear     - Clear terminal screen";
+            },
+            about: () => "👋 Hi! I'm Flimsyplank23.\nI'm a software engineer, discord bot developer, and web enthusiast based in the UK.",
+            skills: () => "💻 Tech Stack:\n- Python\n- HTML/CSS/JS\n- Discord.py\n- Web Development\n- Git/GitHub",
+            socials: () => "🌐 Find me here:\n- GitHub: Flimsyplank23\n- Instagram: @flyingflynn12\n- TikTok: @flynn.planespotting",
+            joke: () => jokes[Math.floor(Math.random() * jokes.length)],
+            fact: () => facts[Math.floor(Math.random() * facts.length)],
             
-            joke: () => {
-                score += 5;
-                return jokes[Math.floor(Math.random() * jokes.length)] + '\n\n+5 points! 🎉';
-            },
-
-            fact: () => {
-                score += 5;
-                return facts[Math.floor(Math.random() * facts.length)] + '\n\n+5 points! 🎉';
-            },
-
-            fortune: () => {
-                const fortunes = [
-                    "Your code will compile on the first try today! 🍀",
-                    "A bug-free day awaits you! ✨",
-                    "Today you will solve that impossible problem! 💡",
-                    "Stack Overflow will have the exact answer you need! 📚",
-                    "Your merge conflicts will be minimal! 🎊",
-                    "Coffee will taste extra good today! ☕"
-                ];
-                score += 10;
-                return '🔮 ' + fortunes[Math.floor(Math.random() * fortunes.length)] + '\n\n+10 points!';
-            },
-
-            magic8ball: (args) => {
-                if (args.length === 0) return 'Ask me a question! (usage: magic8ball Will I finish my project?)';
-                const responses = [
-                    "Yes, definitely! ✅",
-                    "Without a doubt! 💯",
-                    "The code says yes! 🎯",
-                    "Better ask Stack Overflow 🤔",
-                    "Error 404: Answer not found ❌",
-                    "Absolutely! 🌟",
-                    "Try again after debugging 🐛",
-                    "All signs point to yes! ✨"
-                ];
-                score += 5;
-                return '🎱 ' + responses[Math.floor(Math.random() * responses.length)] + '\n\n+5 points!';
-            goon: (args) => {
-                if (args.length === 0) return 'Are you gooner?! (usage: Gooner do I goon?)';
-                const responses = [
-                    "Yes, definitely! ✅",
-                    "Without a doubt! 💯",
-                    "The code says yes! 🎯",
-                    "Absolutely! 🌟",
-                    "All signs point to yes! ✨"
-                ];
-                score += 5;
-                return '😈 ' + responses[Math.floor(Math.random() * responses.length)] + '\n\n+5 points!';
-            },
-
-            coinflip: () => {
-                score += 3;
-                const result = Math.random() < 0.5 ? 'Heads! 👑' : 'Tails! 🦅';
-                return '🪙 ' + result + '\n\n+3 points!';
-            },
-
-            dice: () => {
-                score += 3;
-                const roll = Math.floor(Math.random() * 6) + 1;
-                return '🎲 You rolled a ' + roll + '!\n\n+3 points!';
-            },
-
-            rps: (args) => {
-                if (!args[0] || !['rock', 'paper', 'scissors'].includes(args[0].toLowerCase())) {
-                    return 'Usage: rps rock/paper/scissors';
-                }
-                const choices = ['rock', 'paper', 'scissors'];
-                const computer = choices[Math.floor(Math.random() * 3)];
-                const player = args[0].toLowerCase();
-                
-                let result = '';
-                if (player === computer) {
-                    result = "It's a tie! 🤝";
-                    score += 5;
-                } else if (
-                    (player === 'rock' && computer === 'scissors') ||
-                    (player === 'paper' && computer === 'rock') ||
-                    (player === 'scissors' && computer === 'paper')
-                ) {
-                    result = 'You win! 🎉';
-                    score += 15;
-                } else {
-                    result = 'Computer wins! 😢';
-                    score += 2;
-                }
-                return `✊✋✌️ You: ${player} | Computer: ${computer}\n${result}\n\n+${player === computer ? 5 : (result.includes('win!') ? 15 : 2)} points!`;
-            },
-
-            calculate: (args) => {
-                if (args.length < 3) return 'Usage: calculate 5 + 3';
+            // THE GOON COMMAND - FETCHES IMAGE
+            goon: async () => {
                 try {
-                    const num1 = parseFloat(args[0]);
-                    const operator = args[1];
-                    const num2 = parseFloat(args[2]);
-                    let result;
-                    
-                    switch(operator) {
-                        case '+': result = num1 + num2; break;
-                        case '-': result = num1 - num2; break;
-                        case '*': case 'x': result = num1 * num2; break;
-                        case '/': result = num1 / num2; break;
-                        default: return 'Invalid operator! Use +, -, *, /';
-                    }
-                    
-                    score += 3;
-                    return `🧮 ${num1} ${operator} ${num2} = ${result}\n\n+3 points!`;
-                } catch {
-                    return 'Invalid calculation!';
+                    const response = await fetch('https://nekos.life/api/v2/img/neko');
+                    const data = await response.json();
+                    return `<div style="margin-top:10px;">
+                                <div style="color: #ff5f56; margin-bottom: 5px;">👹 GOBLIN MODE ACTIVATED: Neko Summoned!</div>
+                                <img src="${data.url}" alt="Random Neko" style="max-width: 300px; border-radius: 10px; border: 2px solid #ff5f56; box-shadow: 0 0 15px rgba(255, 95, 86, 0.3);">
+                            </div>`;
+                } catch (error) {
+                    return `<span style="color: #ff5f56;">❌ Failed to summon: The Neko API is unavailable.</span>`;
                 }
             },
-
-            reverse: (args) => {
-                if (args.length === 0) return 'Usage: reverse hello world';
-                score += 5;
-                return '🔄 ' + args.join(' ').split('').reverse().join('') + '\n\n+5 points!';
-            },
-
-            mock: (args) => {
-                if (args.length === 0) return 'Usage: mock your text here';
-                score += 5;
-                const text = args.join(' ');
-                const mocked = text.split('').map((char, i) => 
-                    i % 2 === 0 ? char.toLowerCase() : char.toUpperCase()
-                ).join('');
-                return '🤡 ' + mocked + '\n\n+5 points!';
-            },
-
-            ascii: () => {
-                score += 10;
-                return `
-    _____ _ _                            _             _    ____  _____ 
-   |  ___| (_)_ __ ___  ___ _   _ _ __ | | __ _ _ __ | | _|___ \\|___ / 
-   | |_  | | | '_ \` _ \\/ __| | | | '_ \\| |/ _\` | '_ \\| |/ / __) | |_ \\ 
-   |  _| | | | | | | | \\__ \\ |_| | |_) | | (_| | | | |   < / __/ ___) |
-   |_|   |_|_|_| |_| |_|___/\\__, | .__/|_|\\__,_|_| |_|_|\\_\\_____|____/ 
-                            |___/|_|                                    
-
-+10 points! 🎨`;
-            },
-
-            matrix: () => {
-                if (!secretsFound.includes('matrix')) {
-                    secretsFound.push('matrix');
-                    score += 50;
-                    return secrets.matrix + '\n\n+50 SECRET POINTS! 🎯';
-                }
-                return '🟢 Wake up, Neo... The Matrix has you...';
-            },
-
-            hack: () => {
-                score += 10;
-                return `🔴 INITIATING HACK SEQUENCE...
-[████████████████████] 100%
-ACCESS GRANTED
-Welcome, elite hacker! 😎
-
-+10 points!`;
-            },
-
-            coffee: () => {
-                if (!secretsFound.includes('coffee')) {
-                    secretsFound.push('coffee');
-                    score += 25;
-                    return secrets.coffee + '\n\n+25 SECRET POINTS! 🎯';
-                }
-                return '☕ Here\'s another coffee! Stay caffeinated! +5 points!';
-            },
-
-            sudo: (args) => {
-                if (!secretsFound.includes('sudo')) {
-                    secretsFound.push('sudo');
-                    score += 30;
-                    return secrets.sudo + '\n\n+30 SECRET POINTS! 🎯';
-                }
-                return '🔐 [sudo] password for visitor: ******* (Access Denied)';
-            },
-
-            score: () => `🏆 Your current score: ${score} points!\n💎 Secrets found: ${secretsFound.length}/5`,
-
-            secrets: () => `🔍 Secrets found: ${secretsFound.length}/5\n\nKeep exploring to find hidden commands! 🎯`,
-
+            
             clear: () => {
                 output.innerHTML = '<div class="terminal-line">🎮 Welcome to Flimsyplank23 Fun Terminal! 🎮</div><div class="terminal-line">Type \'help\' to see fun commands</div><div class="terminal-line" style="margin-top: 10px;"></div>';
                 return null;
             }
         };
 
+        // History Navigation
         terminalInput.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowUp') {
                 e.preventDefault();
@@ -898,13 +613,15 @@ Welcome, elite hacker! 😎
             }
         });
 
-        terminalInput.addEventListener('keypress', (e) => {
+        // Command Execution
+        terminalInput.addEventListener('keypress', async (e) => {
             if (e.key === 'Enter') {
                 const input = terminalInput.value.trim();
                 const parts = input.split(' ');
                 const command = parts[0].toLowerCase();
                 const args = parts.slice(1);
                 
+                // Add the user's command to the output
                 const commandLine = document.createElement('div');
                 commandLine.className = 'terminal-line';
                 commandLine.innerHTML = `<span class="terminal-prompt">visitor@flimsyplank23:~$</span> ${terminalInput.value}`;
@@ -914,14 +631,44 @@ Welcome, elite hacker! 😎
                     commandHistory.push(input);
                     historyIndex = -1;
 
-                    const result = commands[command] ? commands[command](args) : `❌ Command not found: ${command}\nType 'help' for fun commands!`;
-                    if (result) {
-                        const resultLine = document.createElement('div');
-                        resultLine.className = 'terminal-line';
-                        resultLine.style.whiteSpace = 'pre-wrap';
-                        resultLine.style.marginTop = '8px';
-                        resultLine.textContent = result;
-                        output.appendChild(resultLine);
+                    if (commands[command]) {
+                        // Show loading indicator for async commands
+                        const loadingId = 'loading-' + Date.now();
+                        const loadingLine = document.createElement('div');
+                        loadingLine.className = 'terminal-line';
+                        loadingLine.id = loadingId;
+                        loadingLine.textContent = '...';
+                        output.appendChild(loadingLine);
+                        
+                        try {
+                            // Execute command (handles both sync and async)
+                            let result = await commands[command](args);
+                            
+                            // Remove loading indicator
+                            const loader = document.getElementById(loadingId);
+                            if (loader) loader.remove();
+
+                            if (result) {
+                                const resultLine = document.createElement('div');
+                                resultLine.className = 'terminal-line';
+                                resultLine.style.marginTop = '8px';
+                                // We use innerHTML here to allow the <img> tag from 'goon' command
+                                // For text commands, we should be careful, but these commands are hardcoded safe.
+                                resultLine.innerHTML = result.replace(/\n/g, '<br>'); 
+                                resultLine.style.color = '#b0b0b0';
+                                output.appendChild(resultLine);
+                            }
+                        } catch (err) {
+                            const loader = document.getElementById(loadingId);
+                            if (loader) loader.remove();
+                            console.error(err);
+                        }
+                    } else {
+                        const errorLine = document.createElement('div');
+                        errorLine.className = 'terminal-line';
+                        errorLine.style.color = '#ff5f56';
+                        errorLine.textContent = `❌ Command not found: ${command}. Type 'help' for fun commands!`;
+                        output.appendChild(errorLine);
                     }
                 }
 
@@ -931,80 +678,15 @@ Welcome, elite hacker! 😎
                 output.appendChild(spacer);
 
                 terminalInput.value = '';
+                // Scroll to bottom
                 output.parentElement.scrollTop = output.parentElement.scrollHeight;
             }
         });
 
-        // Keep focus on terminal input
+        // Keep focus on terminal input when clicking anywhere in the black box
         document.querySelector('.terminal-body').addEventListener('click', () => {
             terminalInput.focus();
         });
-
-        // Music Player
-        const musicToggle = document.getElementById('musicToggle');
-        const bgMusic = document.getElementById('bgMusic');
-        const musicStatus = document.getElementById('musicStatus');
-        const visualizer = document.getElementById('visualizer');
-        let isPlaying = false;
-        let audioLoaded = false;
-
-        // Preload audio
-        bgMusic.load();
-
-        bgMusic.addEventListener('canplaythrough', () => {
-            audioLoaded = true;
-            console.log('Audio ready to play');
-        });
-
-        bgMusic.addEventListener('error', (e) => {
-            console.error('Audio error:', e);
-            musicStatus.textContent = 'Audio file error';
-            audioLoaded = false;
-        });
-
-        musicToggle.addEventListener('click', async () => {
-            if (isPlaying) {
-                bgMusic.pause();
-                musicToggle.textContent = '▶️';
-                musicStatus.textContent = 'Click to play music';
-                visualizer.classList.add('paused');
-                isPlaying = false;
-            } else {
-                try {
-                    // Reset audio if needed
-                    if (bgMusic.readyState < 2) {
-                        musicStatus.textContent = 'Loading audio...';
-                        await bgMusic.load();
-                    }
-                    
-                    await bgMusic.play();
-                    musicToggle.textContent = '⏸️';
-                    musicStatus.textContent = 'Now playing...';
-                    visualizer.classList.remove('paused');
-                    isPlaying = true;
-                } catch (error) {
-                    console.error('Playback error:', error);
-                    musicStatus.textContent = 'Click again to retry';
-                    
-                    // Try one more time
-                    setTimeout(async () => {
-                        try {
-                            await bgMusic.play();
-                            musicToggle.textContent = '⏸️';
-                            musicStatus.textContent = 'Now playing...';
-                            visualizer.classList.remove('paused');
-                            isPlaying = true;
-                        } catch (e) {
-                            console.error('Retry failed:', e);
-                            musicStatus.textContent = 'Playback failed';
-                        }
-                    }, 500);
-                }
-            }
-        });
-
-        // Set volume to 30% by default
-        bgMusic.volume = 0.3;
     </script>
 </body>
 </html>
