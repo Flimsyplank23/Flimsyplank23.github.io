@@ -4,7 +4,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flimsyplank23 - Developer Portfolio</title>
     <style>
-        /* ... Your Existing CSS ... */
         * {
             margin: 0;
             padding: 0;
@@ -298,6 +297,15 @@
             margin-right: 10px;
         }
 
+        /* Styles for Banned/Locked State */
+        .terminal-prompt.banned {
+            color: #ff5f56;
+        }
+        
+        .terminal-prompt.locked {
+            color: #ffbd2e;
+        }
+
         .terminal-input-line {
             display: flex;
             align-items: center;
@@ -355,33 +363,9 @@
                 grid-template-columns: 1fr;
             }
         }
-
-        /* --- NEW: LOCK SCREEN STYLES --- */
-        #lock-screen {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-            cursor: not-allowed;
-        }
-        #lock-screen img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
     </style>
 </head>
 <body>
-    <div id="lock-screen">
-        <img src="https://googleusercontent.com/image_generation_content/0" alt="Access Terminated">
-    </div>
-
     <section class="hero">
         <div class="container">
             <div class="profile-img"></div>
@@ -531,7 +515,7 @@
                         <div class="terminal-line" style="margin-top: 10px;"></div>
                     </div>
                     <div class="terminal-input-line">
-                        <span class="terminal-prompt">visitor@flimsyplank23:~$</span>
+                        <span class="terminal-prompt" id="prompt">visitor@flimsyplank23:~$</span>
                         <input type="text" class="terminal-input" id="terminalInput" autofocus>
                     </div>
                 </div>
@@ -558,9 +542,24 @@
     <script>
         const terminalInput = document.getElementById('terminalInput');
         const output = document.getElementById('output');
-        const lockScreen = document.getElementById('lock-screen');
+        const promptSpan = document.getElementById('prompt');
         let commandHistory = [];
         let historyIndex = -1;
+
+        // --- IP BLOCKING SYSTEM & LOCK SYSTEM ---
+        const ADMIN_PASSWORD = "flynn_is_best";
+        let isBanned = localStorage.getItem('terminal_banned') === 'true';
+        let isLocked = false;
+
+        // Check ban status on load
+        if (isBanned) {
+            promptSpan.innerHTML = "🚫 BLOCKED@server:~$";
+            promptSpan.classList.add('banned');
+            setTimeout(() => {
+                output.innerHTML += '<div class="terminal-line" style="color: #ff5f56; font-weight: bold;">⚠️ ACCESS DENIED: THIS TERMINAL HAS BEEN BLOCKED.</div>';
+                output.innerHTML += '<div class="terminal-line" style="color: #ff5f56;">Type \'unblock [password]\' to restore access.</div>';
+            }, 100);
+        }
 
         const jokes = [
             "Why do programmers prefer dark mode? Because light attracts bugs! 🐛",
@@ -591,7 +590,8 @@
                        "  joke      - Tell a random coding joke\n" +
                        "  fact      - Tell a random tech fact\n" +
                        "  goon      - 👹 Summon a Neko from the void\n" +
-                       "  lock      - 🔒 [SECURE SYSTEM]\n" + // NEW COMMAND
+                       "  lock      - 🔒 Lock the terminal\n" +
+                       "  banme     - 🚫 Block your own IP (Simulation)\n" +
                        "  clear     - Clear terminal screen";
             },
             about: () => "👋 Hi! I'm Flimsyplank23.\nI'm a software engineer, discord bot developer, and web enthusiast based in the UK.",
@@ -600,25 +600,50 @@
             joke: () => jokes[Math.floor(Math.random() * jokes.length)],
             fact: () => facts[Math.floor(Math.random() * facts.length)],
             
-            // LOCK COMMAND
-            lock: () => {
-                setTimeout(() => {
-                    lockScreen.style.display = 'flex';
-                }, 500);
-                return "⚠️ INITIATING LOCKDOWN PROTOCOL...";
-            },
-
             // THE GOON COMMAND - FETCHES IMAGE
             goon: async () => {
                 try {
                     const response = await fetch('https://nekos.life/api/v2/img/neko');
                     const data = await response.json();
                     return `<div style="margin-top:10px;">
-                                 <div style="color: #ff5f56; margin-bottom: 5px;">👹 GOBLIN MODE ACTIVATED: Neko Summoned!</div>
-                                 <img src="${data.url}" alt="Random Neko" style="max-width: 300px; border-radius: 10px; border: 2px solid #ff5f56; box-shadow: 0 0 15px rgba(255, 95, 86, 0.3);">
+                                <div style="color: #ff5f56; margin-bottom: 5px;">👹 GOBLIN MODE ACTIVATED: Neko Summoned!</div>
+                                <img src="${data.url}" alt="Random Neko" style="max-width: 300px; border-radius: 10px; border: 2px solid #ff5f56; box-shadow: 0 0 15px rgba(255, 95, 86, 0.3);">
                             </div>`;
                 } catch (error) {
                     return `<span style="color: #ff5f56;">❌ Failed to summon: The Neko API is unavailable.</span>`;
+                }
+            },
+            
+            // LOCK COMMAND
+            lock: () => {
+                isLocked = true;
+                promptSpan.innerHTML = "🔒 Password:";
+                promptSpan.className = 'terminal-prompt locked';
+                return "🔒 Terminal Locked. Enter password to unlock.";
+            },
+
+            // BLOCK COMMAND (SIMULATION)
+            banme: () => {
+                localStorage.setItem('terminal_banned', 'true');
+                isBanned = true;
+                promptSpan.innerHTML = "🚫 BLOCKED@server:~$";
+                promptSpan.className = 'terminal-prompt banned';
+                return "⚠️ SYSTEM ALERT: Your IP has been logged and blocked.\nConnection terminated.\nType 'unblock <password>' to restore access.";
+            },
+
+            // UNBLOCK COMMAND
+            unblock: (args) => {
+                // If not actually banned, just say so
+                if (!isBanned) return "ℹ️ System Info: You are not currently blocked.";
+
+                if (args[0] === ADMIN_PASSWORD) {
+                    localStorage.removeItem('terminal_banned');
+                    isBanned = false;
+                    promptSpan.innerHTML = "visitor@flimsyplank23:~$";
+                    promptSpan.classList.remove('banned');
+                    return "✅ SUCCESS: IP Unblocked. Access restored.";
+                } else {
+                    return "❌ ERROR: Invalid Password. Access Denied.";
                 }
             },
             
@@ -652,22 +677,66 @@
         terminalInput.addEventListener('keypress', async (e) => {
             if (e.key === 'Enter') {
                 const input = terminalInput.value.trim();
+                
+                // --- LOCK SYSTEM LOGIC ---
+                if (isLocked) {
+                    const commandLine = document.createElement('div');
+                    commandLine.className = 'terminal-line';
+                    // Mask the password in the output
+                    commandLine.innerHTML = `<span class="terminal-prompt locked">🔒 Password:</span> ${'*'.repeat(input.length)}`;
+                    output.appendChild(commandLine);
+
+                    if (input === ADMIN_PASSWORD) {
+                        isLocked = false;
+                        promptSpan.innerHTML = "visitor@flimsyplank23:~$";
+                        promptSpan.className = 'terminal-prompt';
+                        
+                        const msg = document.createElement('div');
+                        msg.className = 'terminal-line';
+                        msg.style.color = '#27c93f';
+                        msg.textContent = "🔓 Access Granted. Terminal unlocked.";
+                        output.appendChild(msg);
+                    } else {
+                        const msg = document.createElement('div');
+                        msg.className = 'terminal-line';
+                        msg.style.color = '#ff5f56';
+                        msg.textContent = "❌ Access Denied.";
+                        output.appendChild(msg);
+                    }
+                    terminalInput.value = '';
+                    output.parentElement.scrollTop = output.parentElement.scrollHeight;
+                    return; // Stop processing command
+                }
+
+                // --- STANDARD COMMAND LOGIC ---
                 const parts = input.split(' ');
                 const command = parts[0].toLowerCase();
                 const args = parts.slice(1);
                 
-                // Add the user's command to the output
                 const commandLine = document.createElement('div');
                 commandLine.className = 'terminal-line';
-                commandLine.innerHTML = `<span class="terminal-prompt">visitor@flimsyplank23:~$</span> ${terminalInput.value}`;
+                const promptHtml = isBanned ? 
+                    `<span class="terminal-prompt banned">🚫 BLOCKED@server:~$</span>` : 
+                    `<span class="terminal-prompt">visitor@flimsyplank23:~$</span>`;
+                
+                commandLine.innerHTML = `${promptHtml} ${terminalInput.value}`;
                 output.appendChild(commandLine);
 
                 if (input) {
                     commandHistory.push(input);
                     historyIndex = -1;
 
-                    if (commands[command]) {
-                        // Show loading indicator for async commands
+                    // --- BANNED LOGIC ---
+                    if (isBanned && command !== 'unblock') {
+                         const errorLine = document.createElement('div');
+                         errorLine.className = 'terminal-line';
+                         errorLine.style.color = '#ff5f56';
+                         errorLine.textContent = `🚫 ACCESS DENIED: Terminal is blocked. Type 'unblock <password>' to unlock.`;
+                         output.appendChild(errorLine);
+                    } 
+                    // --- NORMAL LOGIC ---
+                    else if (commands[command]) {
+                        // Show loading indicator
                         const loadingId = 'loading-' + Date.now();
                         const loadingLine = document.createElement('div');
                         loadingLine.className = 'terminal-line';
@@ -676,10 +745,8 @@
                         output.appendChild(loadingLine);
                         
                         try {
-                            // Execute command (handles both sync and async)
                             let result = await commands[command](args);
                             
-                            // Remove loading indicator
                             const loader = document.getElementById(loadingId);
                             if (loader) loader.remove();
 
@@ -688,7 +755,7 @@
                                 resultLine.className = 'terminal-line';
                                 resultLine.style.marginTop = '8px';
                                 resultLine.innerHTML = result.replace(/\n/g, '<br>'); 
-                                resultLine.style.color = '#b0b0b0';
+                                resultLine.style.color = (command === 'banme' || isBanned) ? '#ff5f56' : '#b0b0b0';
                                 output.appendChild(resultLine);
                             }
                         } catch (err) {
@@ -715,6 +782,7 @@
             }
         });
 
+        // Keep focus on terminal input
         document.querySelector('.terminal-body').addEventListener('click', () => {
             terminalInput.focus();
         });
