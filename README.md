@@ -17,7 +17,7 @@
             line-height: 1.6;
         }
 
-        /* --- TERMINATED SCREEN STYLES (UPDATED) --- */
+        /* --- TERMINATED SCREEN STYLES (ADDED) --- */
         #terminated-screen {
             display: none; /* Hidden unless banned */
             position: fixed;
@@ -54,57 +54,6 @@
             100% { transform: translate(0); }
         }
 
-        .password-container {
-            margin-top: 30px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-        }
-
-        #password-input {
-            background: #1a1a2e;
-            border: 2px solid #ff0000;
-            color: #fff;
-            padding: 12px 20px;
-            font-family: 'Courier New', monospace;
-            font-size: 1rem;
-            width: 300px;
-            max-width: 80%;
-            outline: none;
-            text-align: center;
-        }
-
-        #password-input:focus {
-            border-color: #00d9ff;
-            box-shadow: 0 0 10px #00d9ff;
-        }
-
-        #unlock-btn {
-            background: #ff0000;
-            border: 2px solid #ff0000;
-            color: #fff;
-            padding: 12px 30px;
-            font-family: 'Courier New', monospace;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-
-        #unlock-btn:hover {
-            background: #00d9ff;
-            border-color: #00d9ff;
-            box-shadow: 0 0 15px #00d9ff;
-        }
-
-        #password-error {
-            color: #ff0000;
-            font-size: 0.9rem;
-            min-height: 20px;
-        }
-
         /* --- EXISTING STYLES --- */
         .container {
             max-width: 1200px;
@@ -128,7 +77,7 @@
             border-radius: 50%;
             border: 4px solid #00d9ff;
             margin: 0 auto 30px;
-            background-image: url('https://i.postimg.cc/ZRj4NH2K/IMG-1749.jpg');
+            background-image: url('https://i.postimg.cc/3wC5R7bR/G_GURU_1.jpg](https://i.postimg.cc/ZRj4NH2K/IMG-1749.jpg');
             background-size: cover;
             background-position: center;
             overflow: hidden;
@@ -460,13 +409,6 @@
         <h1 style="font-size: 3rem; margin-bottom: 10px;">ACCESS TERMINATED</h1>
         <p id="display-ip" style="font-size: 1.2rem; margin-bottom: 20px; color: #fff;"></p>
         <p style="letter-spacing: 2px;">YOUR IP HAS BEEN BLACKLISTED. CONNECTION REFUSED.</p>
-        
-        <div class="password-container">
-            <p style="color: #00d9ff; font-size: 1rem;">ENTER OVERRIDE PASSWORD:</p>
-            <input type="password" id="password-input" placeholder="Enter password...">
-            <button id="unlock-btn">UNLOCK SESSION</button>
-            <p id="password-error"></p>
-        </div>
     </div>
 
     <div id="main-content">
@@ -650,16 +592,12 @@
     <script>
         // --- REAL-TIME SECURITY CONFIG ---
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyRMcCaQ5lf-6A5aCz6f5hpuMbdUATVAAGEgiTy3NqKDsj005s57e_Kd2S-SkmhX_XDEg/exec";
-        const CORRECT_PASSWORD = "flynn-is-the-best";
 
         const terminalInput = document.getElementById('terminalInput');
         const output = document.getElementById('output');
         const termScreen = document.getElementById('terminated-screen');
         const mainContent = document.getElementById('main-content');
         const displayIp = document.getElementById('display-ip');
-        const passwordInput = document.getElementById('password-input');
-        const unlockBtn = document.getElementById('unlock-btn');
-        const passwordError = document.getElementById('password-error');
 
         let commandHistory = [];
         let historyIndex = -1;
@@ -668,11 +606,6 @@
 
         // 1. THE GATEKEEPER: Check ban status immediately on load
         async function checkSecurity() {
-            // Check if user has temporary session access
-            if (sessionStorage.getItem('temporaryAccess') === 'granted') {
-                return; // Allow access for this session
-            }
-
             try {
                 // Get user's real IP
                 const ipRes = await fetch('https://api.ipify.org?format=json');
@@ -694,43 +627,6 @@
             }
         }
         checkSecurity();
-
-        // Password unlock functionality
-        function attemptUnlock() {
-            const enteredPassword = passwordInput.value;
-            
-            if (enteredPassword === CORRECT_PASSWORD) {
-                // Grant temporary session access
-                sessionStorage.setItem('temporaryAccess', 'granted');
-                passwordError.textContent = "✓ ACCESS GRANTED - Reloading...";
-                passwordError.style.color = "#00ffa3";
-                
-                setTimeout(() => {
-                    location.reload();
-                }, 1000);
-            } else {
-                passwordError.textContent = "✗ INCORRECT PASSWORD";
-                passwordError.style.color = "#ff0000";
-                passwordInput.value = "";
-                passwordInput.style.borderColor = "#ff0000";
-                
-                setTimeout(() => {
-                    passwordInput.style.borderColor = "#ff0000";
-                }, 200);
-            }
-        }
-
-        if (unlockBtn) {
-            unlockBtn.addEventListener('click', attemptUnlock);
-        }
-
-        if (passwordInput) {
-            passwordInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    attemptUnlock();
-                }
-            });
-        }
 
         const jokes = [
                     "Why do programmers prefer dark mode? Because light attracts bugs! 🐛",
@@ -970,9 +866,6 @@ Welcome, elite hacker! 😎
                         body: JSON.stringify({ ip: userIp })
                     });
 
-                    // Clear session access
-                    sessionStorage.removeItem('temporaryAccess');
-
                     setTimeout(() => { location.reload(); }, 2000);
                     return "⚠️ SECURITY ALERT: IP " + userIp + " blacklisted. System locking...";
                 } catch(e) {
@@ -988,3 +881,81 @@ Welcome, elite hacker! 😎
                 output.innerHTML = '<div class="terminal-line">🎮 Welcome to Flimsyplank23 Fun Terminal! 🎮</div><div class="terminal-line">Type \'help\' to see fun commands</div><div class="terminal-line" style="margin-top: 10px;"></div>';
                 return null;
             }
+        };
+
+        terminalInput.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (commandHistory.length > 0 && historyIndex < commandHistory.length - 1) {
+                    historyIndex++;
+                    terminalInput.value = commandHistory[commandHistory.length - 1 - historyIndex];
+                }
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (historyIndex > 0) {
+                    historyIndex--;
+                    terminalInput.value = commandHistory[commandHistory.length - 1 - historyIndex];
+                } else if (historyIndex === 0) {
+                    historyIndex = -1;
+                    terminalInput.value = '';
+                }
+            }
+        });
+
+        // Updated event listener to handle Async commands (like banme)
+        terminalInput.addEventListener('keypress', async (e) => {
+            if (e.key === 'Enter') {
+                const input = terminalInput.value.trim();
+                const parts = input.split(' ');
+                const command = parts[0].toLowerCase();
+                const args = parts.slice(1);
+                
+                const commandLine = document.createElement('div');
+                commandLine.className = 'terminal-line';
+                commandLine.innerHTML = `<span class="terminal-prompt">visitor@flimsyplank23:~$</span> ${terminalInput.value}`;
+                output.appendChild(commandLine);
+
+                if (input) {
+                    commandHistory.push(input);
+                    historyIndex = -1;
+
+                    if (commands[command]) {
+                        // We await the result in case it is an async function (banme)
+                        const result = await commands[command](args);
+                        
+                        if (result) {
+                            const resultLine = document.createElement('div');
+                            resultLine.className = 'terminal-line';
+                            resultLine.style.whiteSpace = 'pre-wrap';
+                            resultLine.style.marginTop = '8px';
+                            // Special styling for banme command
+                            resultLine.style.color = (command === 'banme') ? '#ff5f56' : '#b0b0b0';
+                            resultLine.textContent = result;
+                            output.appendChild(resultLine);
+                        }
+                    } else {
+                         const resultLine = document.createElement('div');
+                         resultLine.className = 'terminal-line';
+                         resultLine.style.color = '#ff5f56';
+                         resultLine.textContent = `❌ Command not found: ${command}\nType 'help' for fun commands!`;
+                         output.appendChild(resultLine);
+                    }
+                }
+
+                const spacer = document.createElement('div');
+                spacer.className = 'terminal-line';
+                spacer.style.marginTop = '10px';
+                output.appendChild(spacer);
+
+                terminalInput.value = '';
+                output.parentElement.scrollTop = output.parentElement.scrollHeight;
+            }
+        });
+
+        // Keep focus on terminal input
+        document.querySelector('.terminal-body').addEventListener('click', () => {
+            terminalInput.focus();
+        });
+    </script>
+</body>
+</html>
