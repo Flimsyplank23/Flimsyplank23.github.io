@@ -512,7 +512,7 @@
                     </div>
 
                     <div class="project-card">
-                        <a href="https://ahmedacademyphysics.github.io" target="_blank">
+                        <a href="https://ahmedacademyphysics.netlify.app" target="_blank">
                             <img src="https://i.postimg.cc/hGyQM2LH/Screenshot_2026_01_17_at_6_51_21_pm.png" alt="Ahmed Academy Physics" class="project-image">
                         </a>
                         <div class="project-content">
