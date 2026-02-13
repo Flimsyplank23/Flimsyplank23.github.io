@@ -462,7 +462,7 @@
                             <p class="project-description">
                                 The premier GTA V PS5 community website dedicated to GTAMEN content, epic movie productions, and unforgettable events. Features a modern design with community integration.
                             </p>
-                            <a href="https://gtamen-website.github.io" target="_blank" class="project-link">View Project →</a>
+                            <a href="https://gtamen.com" target="_blank" class="project-link">View Project →</a>
                         </div>
                     </div>
 
@@ -523,7 +523,7 @@
                             <p class="project-description">
                                 A comprehensive physics education website featuring slides, interactive modules, and question banks across topics like Thermodynamics, Mechanics, and Nuclear Physics.
                             </p>
-                            <a href="https://ahmedacademyphysics.github.io" target="_blank" class="project-link">View Project →</a>
+                            <a href="https://ahmedacademyphysics.netlify.app" target="_blank" class="project-link">View Project →</a>
                         </div>
                     </div>
 
