@@ -451,8 +451,8 @@
                 <h2 class="section-title">Projects</h2>
                 <div class="projects-grid">
                     <div class="project-card">
-                        <a href="https://gtamen-website.github.io" target="_blank">
-                            <img src="https://i.postimg.cc/50XYr8gn/Screenshot_2026_01_17_at_6_50_29_pm.png" alt="GTAMEN Website" class="project-image">
+                        <a href="https://gtamen.com" target="_blank">
+                            <img src="https://i.postimg.cc/8C1C90BK/IMG-1949.jpg" alt="GTAMEN Website" class="project-image">
                         </a>
                         <div class="project-content">
                             <div class="project-header">
