@@ -502,7 +502,7 @@
                         <div class="project-content">
                             <div class="project-header">
                                 <h3 class="project-title">School Chat Website</h3>
-                                <span class="status-badge status-active">● Active</span>
+                                <span class="status-badge status-finished">● Finished</span>
                             </div>
                             <p class="project-description">
                                 A chat platform designed to bypass school network restrictions, enabling communication during lessons. Built with a focus on simplicity and accessibility.
